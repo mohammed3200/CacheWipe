@@ -1,0 +1,32 @@
+{
+  "app": {
+    "name": "Cache Wipe",
+    "version": "1.0.0",
+    "author": "Mohammed Bala"
+  },
+  "cleanup": {
+    "autoCleanup": false,
+    "cleanupInterval": "weekly",
+    "confirmBeforeDelete": true,
+    "dryRun": false,
+    "logCleanup": true
+  },
+  "cache_paths": {
+    "temp_files": true,
+    "browser_cache": true,
+    "app_cache": true,
+    "trash": false,
+    "downloads": false
+  },
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "file": "cache-wipe.log"
+  },
+  "ui": {
+    "theme": "light",
+    "window_width": 900,
+    "window_height": 700,
+    "show_detailed_stats": true
+  }
+}
