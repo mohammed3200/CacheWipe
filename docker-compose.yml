@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  cache-wipe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cache-wipe
+    volumes:
+      - /tmp:/tmp:rw
+    environment:
+      - LOG_LEVEL=info
+    restart: unless-stopped
