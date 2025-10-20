@@ -1,13 +1,14 @@
 package ui
 
 import (
-	"cache-wipe/internal/cache"
 	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+
+	"cache-wipe/internal/cache"
 )
 
 type CacheItemWidget struct {

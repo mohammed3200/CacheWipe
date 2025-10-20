@@ -3,21 +3,20 @@ package main
 import (
 	"log"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-
 )
 
 const Version = "1.0.0"
 
 func main() {
 	application := app.New()
-	
-	// Create window with NewWindow() - no arguments for Fyne v2.7.0
-	w := application.NewWindow()
-	w.SetTitle("Cache Wipe - System Optimizer")
+
+	// Create window - FIXED: added title argument
+	w := application.NewWindow("Cache Wipe - System Optimizer")
 	w.Resize(fyne.NewSize(900, 700))
 
 	// Create main UI
