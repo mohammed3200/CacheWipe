@@ -1,0 +1,93 @@
+name: Release Cache Wipe
+
+on:
+    push:
+        tags:
+            - "v*.*.*"
+
+permissions:
+    contents: write
+
+jobs:
+    release:
+        name: Create Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.21"
+
+            - name: Install dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev
+
+            - name: Build all platforms
+              run: |
+                  mkdir -p dist
+
+                  # Linux AMD64
+                  GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/cache-wipe-linux-amd64
+
+                  # Linux ARM64
+                  GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/cache-wipe-linux-arm64
+
+                  # Windows AMD64
+                  GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/cache-wipe-windows-amd64.exe
+
+                  # macOS AMD64
+                  GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/cache-wipe-darwin-amd64
+
+                  # macOS ARM64 (Apple Silicon)
+                  GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/cache-wipe-darwin-arm64
+
+            - name: Generate checksums
+              run: |
+                  cd dist
+                  sha256sum * > checksums.sha256
+                  cat checksums.sha256
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: |
+                      dist/*
+                  draft: false
+                  prerelease: false
+                  generate_release_notes: true
+                  body: |
+                      ## Cache Wipe Release ${{ github.ref_name }}
+
+                      ### Downloads
+                      Download the appropriate binary for your system:
+
+                      - **Linux (AMD64)**: `cache-wipe-linux-amd64`
+                      - **Linux (ARM64)**: `cache-wipe-linux-arm64`
+                      - **Windows (AMD64)**: `cache-wipe-windows-amd64.exe`
+                      - **macOS (Intel)**: `cache-wipe-darwin-amd64`
+                      - **macOS (Apple Silicon)**: `cache-wipe-darwin-arm64`
+
+                      ### Installation
+
+                      #### Linux/macOS
+                      ```bash
+                      chmod +x cache-wipe-*
+                      ./cache-wipe-*
+                      ```
+
+                      #### Windows
+                      ```cmd
+                      cache-wipe-windows-amd64.exe
+                      ```
+
+                      ### Verification
+                      Verify checksums:
+                      ```bash
+                      sha256sum -c checksums.sha256
+                      ```
